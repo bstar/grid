@@ -45,6 +45,7 @@
   padding: 10px 20px;
   display: flex;
   justify-content: space-between;
+  height: 60px;
 }
 
 .teamMembersTotal {
@@ -74,4 +75,10 @@
   &.collapseToggle {
     margin-top: 15px;
   }
+}
+
+.searchToggle {
+  cursor: pointer;
+  font-size: 16px;
+  margin: 16px 16px 0px 0px;
 }
