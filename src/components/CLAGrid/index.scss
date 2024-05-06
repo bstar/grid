@@ -1,0 +1,68 @@
+.viewContainer {
+  width: 1322px;
+  margin: 30px;
+}
+
+.teamContainer {
+  margin: 10px 0 0;
+  padding: 0 20px 20px;
+}
+
+.gridHeader {
+  background-color: #e2e4ee;
+  padding: 10px;
+}
+
+.row {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 10px;
+}
+
+.buttonA {
+  padding: 5px 30px;
+  background-color: #2e334e;
+}
+
+.colHours {
+  display: flex;
+  max-width: 200px;
+}
+
+.teamMembers {
+  font-size: 26px;
+  font-weight: 700;
+  font-family: arial;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.teamMembersTotal {
+  font-size: 12px;
+  color: #888;
+}
+
+.searchField {
+  background-color: #fff;
+  font-size: 14px;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  padding: 5px 10px;
+  color: #333;
+}
+
+.sortToggle,
+.collapseToggle {
+  font-size: 14px;
+  cursor: pointer;
+  color: #888;
+
+  &.sortToggle {
+    margin: 15px 15px 0 0;
+  }
+
+  &.collapseToggle {
+    margin-top: 15px;
+  }
+}
