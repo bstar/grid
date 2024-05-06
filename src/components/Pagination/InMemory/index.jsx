@@ -1,32 +1,25 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import './index.scss';
 
 const Pagination = ({ currentPage, itemsPerPage, totalItems, onPageChange, onItemsPerPageChange }) => {
   const maxPages = Math.ceil(totalItems / itemsPerPage);
 
-  const pages = [];
-  for (let i = 1; i <= maxPages; i++) {
-    pages.push(
-      <span
-        key={i}
-        style={{ cursor: 'pointer', fontWeight: i === currentPage ? 'bold' : 'normal', margin: '0 5px' }}
-        onClick={() => onPageChange(i)}
-      >
-        {i}
-      </span>
-    );
-  }
+  const pageNumbers = Array.from({ length: maxPages }, (_, i) => (
+    <span
+      key={i + 1}
+      className={`page-number ${i + 1 === currentPage ? 'active' : ''}`}
+      onClick={() => onPageChange(i + 1)}
+    >
+      {i + 1}
+    </span>
+  ));
 
-  const nextPage = () => {
-    if (currentPage < maxPages) {
-      onPageChange(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
+  const handlePageChange = (newPage) => {
+    if(newPage > 0 && newPage <= maxPages) {
+      onPageChange(newPage);
     }
   };
 
@@ -35,8 +28,8 @@ const Pagination = ({ currentPage, itemsPerPage, totalItems, onPageChange, onIte
       <div>
         <Form.Select
           value={itemsPerPage}
-          onChange={e => onItemsPerPageChange(parseInt(e.target.value))}
-          style={{ width: '200px', border: 'none' }}
+          onChange={(e) => onItemsPerPageChange(parseInt(e.target.value, 10))}
+          className="page-selector"
         >
           <option value="5">Results per page: 5</option>
           <option value="10">Results per page: 10</option>
@@ -44,9 +37,19 @@ const Pagination = ({ currentPage, itemsPerPage, totalItems, onPageChange, onIte
         </Form.Select>
       </div>
       <div>
-        <span style={{ cursor: 'pointer' }} onClick={prevPage} disabled={currentPage === 1}>{'< '}</span>
-        {pages}
-        <span style={{ cursor: 'pointer' }} onClick={nextPage} disabled={currentPage === maxPages}>{' >'}</span>
+        <span
+          className="page-control"
+          onClick={() => handlePageChange(currentPage - 1)}
+        >
+          <FontAwesomeIcon icon={faChevronLeft} className="chevronLeft" />
+        </span>
+        {pageNumbers}
+        <span
+          className="page-control"
+          onClick={() => handlePageChange(currentPage + 1)}
+        >
+          <FontAwesomeIcon icon={faChevronRight} className="chevronRight" />
+        </span>
       </div>
       <div />
     </div>

@@ -3,9 +3,35 @@
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+
+  .page-number {
+    cursor: pointer;
+    margin: 0 5px;
+
+    &.active {
+      font-weight: bold;
+    }
+  }
+
+  .page-selector {
+    width: 200px;
+    border: none;
+  }
+
+  .page-control {
+    cursor: pointer;
+  }
 }
 
 .paginationItem {
   margin: 0 5px;
   cursor: pointer;
+}
+
+.chevronRight {
+  padding-left: 40px;
+}
+
+.chevronLeft {
+  padding-right: 40px;
 }

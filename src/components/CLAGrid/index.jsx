@@ -95,7 +95,7 @@ const CLAGrid = () => {
                   <FontAwesomeIcon icon={faEllipsisVertical} />
                 </div>
               </Col>
-              {item.val.map((val, id) => (<Col key={`col_${id}`}>{val}</Col>))}
+              {item.val.map((val, id) => (<Col className="colDecoration" key={`col_${id}`}>{val}</Col>))}
             </Row>
           ))}
 
