@@ -3,6 +3,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+  user-select: none;
   
   .page-control.dimmed {
     opacity: 0.5;
