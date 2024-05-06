@@ -38,14 +38,14 @@ const Pagination = ({ currentPage, itemsPerPage, totalItems, onPageChange, onIte
       </div>
       <div>
         <span
-          className="page-control"
+          className={`page-control ${currentPage === 1 ? 'dimmed' : ''}`}
           onClick={() => handlePageChange(currentPage - 1)}
         >
           <FontAwesomeIcon icon={faChevronLeft} className="chevronLeft" />
         </span>
         {pageNumbers}
         <span
-          className="page-control"
+          className={`page-control ${currentPage === maxPages ? 'dimmed' : ''}`}
           onClick={() => handlePageChange(currentPage + 1)}
         >
           <FontAwesomeIcon icon={faChevronRight} className="chevronRight" />

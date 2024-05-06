@@ -63,7 +63,6 @@ const CLAGrid = () => {
   return (
     <Card className="viewContainer">
       <div className="gridHeader">
-        <button className="ButtonA">Trade</button>
       </div>
 
       <div className="teamMembers">

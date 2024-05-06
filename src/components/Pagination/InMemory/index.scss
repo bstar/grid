@@ -3,6 +3,11 @@
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+  
+  .page-control.dimmed {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
   .page-number {
     cursor: pointer;
