@@ -4,21 +4,70 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import './index.scss';
 
+
+// amount of "page numbers" to show before ellipsis
+const pageGroupSize = 5;
+
 const Pagination = ({ currentPage, itemsPerPage, totalItems, onPageChange, onItemsPerPageChange }) => {
   const maxPages = Math.ceil(totalItems / itemsPerPage);
 
-  const pageNumbers = Array.from({ length: maxPages }, (_, i) => (
-    <span
-      key={i + 1}
-      className={`page-number ${i + 1 === currentPage ? 'active' : ''}`}
-      onClick={() => onPageChange(i + 1)}
-    >
-      {i + 1}
-    </span>
-  ));
+  let pageNumbers = [];
+  if (maxPages > pageGroupSize) {
+    let startPage, endPage;
+
+    if(currentPage <= pageGroupSize) {
+      // Display the first 5 pages
+      startPage = 1;
+      endPage = pageGroupSize;
+    } else if (currentPage + 1 >= maxPages) {
+      // Display the last 5 pages
+      startPage = maxPages - (pageGroupSize - 1);
+      endPage = maxPages;
+    } else {
+      // Display the current page and 4 page numbers before it
+      startPage = currentPage - 4;
+      endPage = currentPage;
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <span
+          key={i}
+          className={`page-number ${i === currentPage ? 'active' : ''}`}
+          onClick={() => onPageChange(i)}
+        >
+          {i}
+        </span>
+      );
+    }
+
+    if (endPage < maxPages) {
+      pageNumbers.push(<span key="ellipsis" className="pagination-ellipsis">&hellip;</span>);
+      pageNumbers.push(
+        <span
+          key={maxPages}
+          className={`page-number ${maxPages === currentPage ? 'active' : ''}`}
+          onClick={() => onPageChange(maxPages)}
+        >
+          {maxPages}
+        </span>
+      );
+    }
+  } else {
+    // If there are 5 or fewer pages, show them all without ellipses
+    pageNumbers = Array.from({ length: maxPages }, (_, i) => (
+      <span
+        key={i + 1}
+        className={`page-number ${i + 1 === currentPage ? 'active' : ''}`}
+        onClick={() => onPageChange(i + 1)}
+      >
+        {i + 1}
+      </span>
+    ));
+  }
 
   const handlePageChange = (newPage) => {
-    if(newPage > 0 && newPage <= maxPages) {
+    if (newPage > 0 && newPage <= maxPages) {
       onPageChange(newPage);
     }
   };
