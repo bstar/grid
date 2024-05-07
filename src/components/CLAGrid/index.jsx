@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -14,6 +14,9 @@ const CLAGrid = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
   const [collapse, setCollapse] = useState(false);
+  const [columnSums, setColumnSums] = useState([]);
+  const [totalSum, setTotalSum] = useState('');
+  const [filteredData, setFilteredData] = useState(items);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -29,10 +32,18 @@ const CLAGrid = () => {
     { heading: 'Week 9', range: '6/26-7/2' },
   ];
 
-  // Apply search filter on the entire dataset
-  const filteredData = items.filter(item =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const sumColumns = (data) => (
+    data.reduce((acc, item) => {
+      item.val.forEach((num, index) => {
+        if (acc[index] === undefined) {
+          acc[index] = 0;
+        }
+        acc[index] += num;
+      });
+      return acc;
+    }, [])
   );
+
 
   const totalItems = filteredData.length;
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -80,82 +91,104 @@ const CLAGrid = () => {
     setIsSearchVisible(!isSearchVisible);
   };
 
+  // TODO update this to stack filters
+  useEffect(() => {
+    const filtered = items.filter(item =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredData(filtered);
+    const columnSum = sumColumns(filtered);
+    setColumnSums(columnSum);
+    setTotalSum(columnSum.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
+  }, [searchTerm]);
+
   return (
     <Card className="viewContainer">
-      <div className="gridHeader">
-        {/* Header content here */}
-      </div>
-
-
-      {!collapse && (
-        <Container className="teamContainer">
-
-
+      <Container className="teamContainer">
+        <div className="teamMembers">
+          <div>Team Members <span className="teamMembersTotal">{totalItems} Total</span></div>
           <div className="teamMembers">
-            <div>Team Members <span className="teamMembersTotal">{totalItems} Total</span></div>
-            <div className="teamMembers">
-              <>
-                {isSearchVisible && (
-                  <div style={{ marginRight: '15px' }}>
-                    <input
-                      type="text"
-                      placeholder="Search by worker"
-                      value={searchTerm}
-                      onChange={handleSearchChange}
-                      className="searchField"
-                    />
-                  </div>
-                )}
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  onClick={toggleSearchVisibility}
-                  className="searchToggle"
-                  style={{ opacity: isSearchVisible ? 0.5 : 1 }}
-                />
-              </>
-              <div className="sortToggle" onClick={handleSortToggle}>
-                {sortOrder === 'asc' ? 'Sort Z - A' : 'Sort A - Z'}
-              </div>
-              <div className="collapseToggle" onClick={handleCollapse}>{collapse ? 'Expand Section' : 'Collapse Section'}</div>
-            </div>
-          </div>
-
-          <Row className="gridHeaderRow">
-            <Col style={{ minWidth: '300px' }}></Col>
-            <Col xs={6} className="colHours"></Col>
-            {weeks.map((week, index) => (
-              <Col key={`header_${index}`}>
-                <div><strong>{week.heading}</strong></div>
-                <div style={{ fontSize: '12px' }}>{week.range}</div>
-              </Col>
-            ))}
-          </Row>
-          {currentItems.map((item, index) => (
-            <Row key={`row_${index}`} className="gridRow">
-              <Col style={{ minWidth: '300px' }}>{item.name}</Col>
-              <Col xs={6} className="colHours">
-                <div style={{ marginRight: '30px', paddingBottom: '15px' }}>{sumValues(item.val)} Hours</div>
-                <div>
-                  <FontAwesomeIcon icon={faEllipsisVertical} />
+            <>
+              {isSearchVisible && (
+                <div style={{ marginRight: '15px' }}>
+                  <input
+                    type="text"
+                    placeholder="Search by worker"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="searchField"
+                  />
                 </div>
-              </Col>
-              {item.val.map((hour, idx) => (
-                <Col className="colDecoration" key={`col_${idx}`}>
-                  <div className="colBorder">{hour}</div>
+              )}
+              <FontAwesomeIcon
+                icon={faSearch}
+                onClick={toggleSearchVisibility}
+                className="searchToggle"
+                style={{ opacity: isSearchVisible ? 0.5 : 1 }}
+              />
+            </>
+            <div className="sortToggle" onClick={handleSortToggle}>
+              {sortOrder === 'asc' ? 'Sort Z - A' : 'Sort A - Z'}
+            </div>
+            <div className="collapseToggle" onClick={handleCollapse}>{collapse ? 'Expand Section' : 'Collapse Section'}</div>
+          </div>
+        </div>
+
+        {!collapse && (
+          <>
+            <Row className="gridHeaderRow">
+              <Col style={{ minWidth: '300px' }}></Col>
+              <Col xs={6} className="colHours"></Col>
+              {weeks.map((week, index) => (
+                <Col key={`header_${index}`} className="weekItem">
+                  <div><strong>{week.heading}</strong></div>
+                  <div style={{ fontSize: '12px' }}>{week.range}</div>
                 </Col>
               ))}
             </Row>
-          ))}
+            { currentItems.length > 0 &&
+              <Row className="gridRow">
+                <Col  className="colHours" style={{ minWidth: '300px' }}>Total Hours</Col>
+                <Col xs={6} className="colHours">
+                  <div style={{ marginRight: '30px', paddingBottom: '15px' }}>{totalSum} Hours</div>
+                </Col>
+                {columnSums.map((hour, idx) => (
+                  <Col className="colHeadDecoration" key={`col_${idx}`}>
+                    <div className="colBorder">{hour}</div>
+                  </Col>
+                ))}
+              </Row>
+            }
+            {currentItems.length === 0 &&
+              <div className="noItems">No items to display</div>
+            }
+            {currentItems.map((item, index) => (
+              <Row key={`row_${index}`} className="gridRow">
+                <Col style={{ minWidth: '300px' }}>{item.name}</Col>
+                <Col xs={6} className="colHours">
+                  <div style={{ marginRight: '30px', paddingBottom: '15px' }}>{sumValues(item.val)} Hours</div>
+                  <div>
+                    <FontAwesomeIcon icon={faEllipsisVertical} />
+                  </div>
+                </Col>
+                {item.val.map((hour, idx) => (
+                  <Col className="colDecoration" key={`col_${idx}`}>
+                    <div className="colBorder">{hour}</div>
+                  </Col>
+                ))}
+              </Row>
+            ))}
 
-          <Pagination
-            currentPage={currentPage}
-            itemsPerPage={itemsPerPage}
-            totalItems={totalItems}
-            onPageChange={handlePageChange}
-            onItemsPerPageChange={handleItemsPerPageChange}
-          />
-        </Container>
-      )}
+            <Pagination
+              currentPage={currentPage}
+              itemsPerPage={itemsPerPage}
+              totalItems={totalItems}
+              onPageChange={handlePageChange}
+              onItemsPerPageChange={handleItemsPerPageChange}
+            />
+          </>
+        )}
+      </Container>
     </Card>
   );
 };
