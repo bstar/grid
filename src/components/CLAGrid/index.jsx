@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
-import Pagination from '../Pagination/InMemory/index.jsx';
+import Pagination from './Pagination/InMemory/index.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisVertical, faSearch } from '@fortawesome/free-solid-svg-icons';
 import data from '../../seeds/bad_data.json';
@@ -17,6 +17,17 @@ const CLAGrid = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const weeks = [
+    { heading: 'Week 1', range: '5/1-5/7' },
+    { heading: 'Week 2', range: '5/8-5/14' },
+    { heading: 'Week 3', range: '5/15-5/21' },
+    { heading: 'Week 4', range: '5/22-5/28' },
+    { heading: 'Week 5', range: '5/29-6/4' },
+    { heading: 'Week 6', range: '6/5-6/11' },
+    { heading: 'Week 7', range: '6/12-6/18' },
+    { heading: 'Week 8', range: '6/19-6/25' },
+    { heading: 'Week 9', range: '6/26-7/2' },
+  ];
 
   // Apply search filter on the entire dataset
   const filteredData = items.filter(item =>
@@ -26,7 +37,7 @@ const CLAGrid = () => {
   const totalItems = filteredData.length;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  
+
   // Slice the filtered data for current page display
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
@@ -74,41 +85,54 @@ const CLAGrid = () => {
       <div className="gridHeader">
         {/* Header content here */}
       </div>
-      
-      <div className="teamMembers">
-        <div>Team Members <span className="teamMembersTotal">{totalItems} Total</span></div>
-        <div className="teamMembers">
-          <>
-            {isSearchVisible && (
-              <div style={{ marginRight: '15px' }}>
-                <input
-                  type="text"
-                  placeholder="Search by worker"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  className="searchField"
-                />
-              </div>
-            )}
-            <FontAwesomeIcon
-              icon={faSearch}
-              onClick={toggleSearchVisibility}
-              className="searchToggle"
-              style={{ opacity: isSearchVisible ? 0.5 : 1 }}
-            />
-          </>
-          <div className="sortToggle" onClick={handleSortToggle}>
-            {sortOrder === 'asc' ? 'Sort Z - A' : 'Sort A - Z'}
-          </div>
-          <div className="collapseToggle" onClick={handleCollapse}>{collapse ? 'Expand Section' : 'Collapse Section'}</div>
-        </div>
-      </div>
-      
+
+
       {!collapse && (
         <Container className="teamContainer">
+
+
+          <div className="teamMembers">
+            <div>Team Members <span className="teamMembersTotal">{totalItems} Total</span></div>
+            <div className="teamMembers">
+              <>
+                {isSearchVisible && (
+                  <div style={{ marginRight: '15px' }}>
+                    <input
+                      type="text"
+                      placeholder="Search by worker"
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      className="searchField"
+                    />
+                  </div>
+                )}
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  onClick={toggleSearchVisibility}
+                  className="searchToggle"
+                  style={{ opacity: isSearchVisible ? 0.5 : 1 }}
+                />
+              </>
+              <div className="sortToggle" onClick={handleSortToggle}>
+                {sortOrder === 'asc' ? 'Sort Z - A' : 'Sort A - Z'}
+              </div>
+              <div className="collapseToggle" onClick={handleCollapse}>{collapse ? 'Expand Section' : 'Collapse Section'}</div>
+            </div>
+          </div>
+
+          <Row className="gridHeaderRow">
+            <Col style={{ minWidth: '300px' }}></Col>
+            <Col xs={6} className="colHours"></Col>
+            {weeks.map((week, index) => (
+              <Col key={`header_${index}`}>
+                <div><strong>{week.heading}</strong></div>
+                <div style={{ fontSize: '12px' }}>{week.range}</div>
+              </Col>
+            ))}
+          </Row>
           {currentItems.map((item, index) => (
-            <Row key={`row_${index}`} className="row">
-              <Col style={{ minWidth: '400px' }}>{item.name}</Col>
+            <Row key={`row_${index}`} className="gridRow">
+              <Col style={{ minWidth: '300px' }}>{item.name}</Col>
               <Col xs={6} className="colHours">
                 <div style={{ marginRight: '30px', paddingBottom: '15px' }}>{sumValues(item.val)} Hours</div>
                 <div>
@@ -116,7 +140,9 @@ const CLAGrid = () => {
                 </div>
               </Col>
               {item.val.map((hour, idx) => (
-                <Col className="colDecoration" key={`col_${idx}`}>{hour}</Col>
+                <Col className="colDecoration" key={`col_${idx}`}>
+                  <div className="colBorder">{hour}</div>
+                </Col>
               ))}
             </Row>
           ))}

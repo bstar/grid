@@ -6,16 +6,16 @@ import './index.scss';
 
 
 // amount of "page numbers" to show before ellipsis
-const pageGroupSize = 5;
+const pageGroupSize = 3;
 
 const Pagination = ({ currentPage, itemsPerPage, totalItems, onPageChange, onItemsPerPageChange }) => {
   const maxPages = Math.ceil(totalItems / itemsPerPage);
-
   let pageNumbers = [];
+
   if (maxPages > pageGroupSize) {
     let startPage, endPage;
 
-    if(currentPage <= pageGroupSize) {
+    if (currentPage <= pageGroupSize) {
       // Display the first 5 pages
       startPage = 1;
       endPage = pageGroupSize;
@@ -25,7 +25,7 @@ const Pagination = ({ currentPage, itemsPerPage, totalItems, onPageChange, onIte
       endPage = maxPages;
     } else {
       // Display the current page and 4 page numbers before it
-      startPage = currentPage - 4;
+      startPage = currentPage - 2;
       endPage = currentPage;
     }
 
@@ -83,6 +83,7 @@ const Pagination = ({ currentPage, itemsPerPage, totalItems, onPageChange, onIte
           <option value="5">Results per page: 5</option>
           <option value="10">Results per page: 10</option>
           <option value="15">Results per page: 15</option>
+          <option value="9999999">Results per page: All</option>
         </Form.Select>
       </div>
       <div>
