@@ -85,7 +85,7 @@ const CLAGrid = () => {
         return b.name.localeCompare(a.name);
       }
     });
-    setItems(sortedItems);
+    setFilteredData(sortedItems); // Update this line
   };
 
   const toggleSearchVisibility = () => {
