@@ -91,8 +91,11 @@
   font-size: 14px;
   cursor: pointer;
   color: #888;
-  margin-right: 20px;
   user-select: none;
+}
+
+.sortToggle {
+  margin-right: 20px;
 }
 
 .searchToggle {
