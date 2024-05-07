@@ -165,7 +165,7 @@ const CLAGrid = () => {
             }
             {currentItems.map((item, index) => (
               <Row key={`row_${index}`} className="gridRow">
-                <Col style={{ minWidth: '300px' }}>{item.name}</Col>
+                <Col style={{ minWidth: '300px', marginTop: '8px' }}>{item.name}</Col>
                 <Col xs={6} className="colHours">
                   <div style={{ marginRight: '30px', paddingBottom: '15px' }}>{sumValues(item.val)} Hours</div>
                   <div>
