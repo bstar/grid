@@ -44,6 +44,7 @@ const CLAGrid = () => {
     }, [])
   );
 
+  const isOdd = (num) => num % 2;
 
   const totalItems = filteredData.length;
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -172,7 +173,7 @@ const CLAGrid = () => {
                   </div>
                 </Col>
                 {item.val.map((hour, idx) => (
-                  <Col className="colDecoration" key={`col_${idx}`}>
+                  <Col className="colDecoration" key={`col_${idx}`} style={!isOdd(index) ? { backgroundColor: 'rgba(226, 228, 238, 0.30)' } : {} }>
                     <div className="colBorder">{hour}</div>
                   </Col>
                 ))}
