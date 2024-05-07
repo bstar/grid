@@ -74,7 +74,7 @@ const Pagination = ({ currentPage, itemsPerPage, totalItems, onPageChange, onIte
 
   return (
     <div className="pagination">
-      <div>
+      <div style={{ width: '400px' }}>
         <Form.Select
           value={itemsPerPage}
           onChange={(e) => onItemsPerPageChange(parseInt(e.target.value, 10))}
@@ -101,7 +101,7 @@ const Pagination = ({ currentPage, itemsPerPage, totalItems, onPageChange, onIte
           <FontAwesomeIcon icon={faChevronRight} className="chevronRight" />
         </span>
       </div>
-      <div />
+      <div style={{ width: '300px' }} />
     </div>
   );
 };
